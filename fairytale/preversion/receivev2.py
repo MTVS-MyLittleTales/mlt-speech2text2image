@@ -21,22 +21,21 @@ def showImage(img):
     plt.show()
 
 
-@app.route('/img/getImage', methods=['POST'])
+@app.route('/receive/image', methods=['POST'])
 def receive():
     data = request.get_json()
-    img = base64.b64decode(data["img"])
-    title = data["title"]
+    img = base64.b64decode(data["image"])
     nparr = np.fromstring(img, dtype=np.uint8)
     # decode image
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     
     # print(img)
     showImage(img)
-    response = {'message':'image: {} received. size={}x{}'.format(title, img.shape[0], img.shape[1])}
+    response = {'message':'image received. size={}x{}'.format(img.shape[0], img.shape[1])}
 
     # encode response
     response = jsonpickle.encode(response)
     return Response(response=response, status = 200, mimetype='application/json')
 
 if __name__=='__main__':
-    app.run(host='0.0.0.0', port = 5001)
+    app.run(host='0.0.0.0', port = 5003)
